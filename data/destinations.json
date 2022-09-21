@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "name": "Budapest",
+    "country": "Hungary",
+    "attractions": [
+      {
+        "id": 10,
+        "name": "Buda Castle",
+        "description": "Buda Castle is the historical castle and palace complex of the Hungarian Kings in Budapest.",
+        "category": "HISTORY"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Veszprém",
+    "country": "Hungary",
+    "attractions": [
+      {
+        "id": 11,
+        "name": "Zoo",
+        "description": "Zoo is located in a beautiful environment, not far from lake Balaton. Interesting animals, feeding actions.",
+        "category": "ENTERTAINMENT"
+      }
+    ]
+  }
+]

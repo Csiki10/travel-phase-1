@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "userId": 100,
+    "destinationId": 1,
+    "startDate": "2022-08-15",
+    "endDate": "2022-08-17",
+    "visits": [
+      {
+        "id": 20,
+        "attractionId": 10,
+        "visitDate": "2022-08-15"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "userId": 100,
+    "destinationId": 2,
+    "startDate": "2022-08-20",
+    "endDate": "2022-08-21",
+    "visits": [
+      {
+        "id": 21,
+        "attractionId": 11,
+        "visitDate": "2022-08-15"
+      }
+    ]
+  }
+]

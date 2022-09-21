@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "userId": 100,
+    "rating": 5,
+    "comment": "Amazing building, unique shapes.",
+    "attractionId": 20
+  }
+]

@@ -1,0 +1,25 @@
+plugins {
+    id 'application'
+    id 'io.freefair.lombok' version '6.3.0'
+}
+
+group 'travel'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+application {
+    mainClass = 'travel.Application'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
