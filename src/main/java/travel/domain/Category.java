@@ -1,5 +1,6 @@
 package travel.domain;
 
 public enum Category {
-    HISTORY
+    HISTORY,
+    ENTERTAINMENT
 }
