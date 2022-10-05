@@ -9,7 +9,8 @@ public class Application {
     private final FileDataStore dataStore = new FileDataStore("data");
 
     public static void main(String[] args) {
-        new Application().run();
+        //new Application().run();
+        System.out.println("asd");
     }
 
     private void run() {
