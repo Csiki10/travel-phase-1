@@ -20,10 +20,10 @@ public class DefaultTravelService implements TravelService {
 
     @Override
     public User authenticateUser(Credentials credentials) {
-        for (User u : dataStore.getUsers()) {
-            if (u.getCredential() == credentials) {
-                loggedinUser = u;
-                return u;
+        for (User user : dataStore.getUsers()) {
+            if (user.getCredential() == credentials) {
+                loggedinUser = user;
+                return user;
             }
         }
         throw new AuthenticationException("Invalid user credentials");
@@ -51,13 +51,6 @@ public class DefaultTravelService implements TravelService {
             }
         }
         stat.setNumberOfUserVisits(VisitsNum);
-
-        /*int writtenRev = 0;
-        for (Review rev : dataStore.getReviews()) {
-            if (rev.getUser() == loggedinUser){
-                writtenRev++;
-            }
-        }*/
         stat.setNumberOfUserWrittenReviews(((int) dataStore.getReviews().stream().filter(t -> t.getUser() == loggedinUser).count()));
         return stat;
     }
@@ -77,7 +70,10 @@ public class DefaultTravelService implements TravelService {
 
     @Override
     public void createAttraction(long destinationId, Attraction attraction) {
-        dataStore.getDestinations().stream().filter(t->t.getId()==destinationId).findFirst().get().getAttractions().add(attraction);
+        dataStore.getDestinations()
+                .stream()
+                .filter(t->t.getId()==destinationId)
+                .findFirst().get().getAttractions().add(attraction);
     }
 
     @Override
