@@ -13,4 +13,7 @@ public interface TravelService {
     void createAttraction(long destinationId, Attraction attraction);
     List<Trip> getTrips(LocalDate startDate, LocalDate endDate);
     void createTrip(Trip trip);
+    List<Attraction> getAttractions();
+    long getNextTripId();
+    long getNextAttractionId();
 }

@@ -37,18 +37,20 @@ public class FileDataStore implements DataStore {
 
     @Override
     public void loadData() {
+
         objectMapper.findAndRegisterModules();
         DestinationDto[] destinations = readDestinations();
         UserDto[] users = readUsers();
-        TripDto[] trips = readTripss();
-        ReviewDto[] reviews = readReaviews();
-
-
+        TripDto[] trips = readTrips();
+        ReviewDto[] reviews = readReviews();
 
         ConvertUsersData(users);
         ConvertDestinationsData(destinations);
         ConvertReviewsData(reviews);
         ConvertTripsData(trips);
+
+        setAttractions();
+
         int a = 0;
     }
 
@@ -84,7 +86,12 @@ public class FileDataStore implements DataStore {
     public List<Review> getReviews() {
         return reviews;
     }
-// endregion
+
+    public List<Attraction> getAttractions() {
+        return attractions;
+    }
+
+    // endregion
 
     //region READ
     private DestinationDto[] readDestinations() {
@@ -95,7 +102,7 @@ public class FileDataStore implements DataStore {
         }
     }
 
-    private TripDto[] readTripss() {
+    private TripDto[] readTrips() {
         try {
             return objectMapper.readValue(new File(getPath(TRIPS_FILE_NAME)), TripDto[].class);
         } catch (IOException e) {
@@ -103,7 +110,7 @@ public class FileDataStore implements DataStore {
         }
     }
 
-    private ReviewDto[] readReaviews() {
+    private ReviewDto[] readReviews() {
         try {
             return objectMapper.readValue(new File(getPath(REVIEWS_FILE_NAME)), ReviewDto[].class);
         } catch (IOException e) {
@@ -226,6 +233,7 @@ public class FileDataStore implements DataStore {
             newU.setId(userD.getId());
             newU.setFullName(userD.getName());
             newU.setRole(userD.getRole());
+            newU.setEmail(userD.getEmail());
             newU.setCredential(ConvertCredentialData(userD.getCredentials()));
 
             users.add(newU);

@@ -7,6 +7,16 @@ public class Attraction {
     private String description;
     private Category category;
 
+    public Attraction(long id, String name, String description, Category category) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+    }
+
+    public Attraction() {
+    }
+
     public long getId() {
         return id;
     }
