@@ -1,8 +1,6 @@
 package travel.persistence.dto;
-
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class VisitDto {

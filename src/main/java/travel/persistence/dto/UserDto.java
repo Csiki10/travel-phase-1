@@ -1,7 +1,6 @@
 package travel.persistence.dto;
-
-import lombok.Data;
 import travel.domain.Role;
+import lombok.Data;
 
 @Data
 public class UserDto {

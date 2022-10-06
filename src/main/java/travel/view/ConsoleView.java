@@ -70,6 +70,7 @@ public class ConsoleView implements View {
                     break;
                 case 6:
                     travelService.saveData();
+                    System.out.println("Data has been saved");
                     System.exit(0);
 
                     break;
@@ -110,6 +111,7 @@ public class ConsoleView implements View {
                     break;
                 case 5:
                     travelService.saveData();
+                    System.out.println("Data has been saved");
                     System.exit(0);
                     break;
                 default:

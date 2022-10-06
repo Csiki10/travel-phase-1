@@ -1,12 +1,12 @@
 package travel.persistence.dto;
 
-import lombok.Data;
+
 import travel.domain.Destination;
 import travel.domain.User;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import lombok.Data;
 @Data
 public class TripDto {
 

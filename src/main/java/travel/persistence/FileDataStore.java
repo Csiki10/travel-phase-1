@@ -2,6 +2,9 @@ package travel.persistence;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.fasterxml.jackson.datatype:jackson-datatype-jsr310
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import travel.domain.*;
 import travel.persistence.dto.*;
 
@@ -16,7 +19,6 @@ public class FileDataStore implements DataStore {
     private static final String TRIPS_FILE_NAME = "trips.json";
     private static final String USERS_FILE_NAME = "users.json";
     private static final String REVIEWS_FILE_NAME = "reviews.json";
-
 
     private static final String DESTINATIONS_FILE_NAME1 = "destinations1.json";
     private static final String TRIPS_FILE_NAME1 = "trips1.json";
@@ -35,7 +37,13 @@ public class FileDataStore implements DataStore {
     TripDto[] tripsDtos  ;
     ReviewDto[] reviewsDtos ;
 
+    List<DestinationDto> destinationsDtosBack;
+    List<UserDto> usersDtosBack ;
+    List<TripDto> tripsDtosBack ;
+    List<ReviewDto> reviewsDtosBack;
+
     public FileDataStore(String basePath) {
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         this.basePath = basePath;
         users = new ArrayList<>();
         destinations = new ArrayList<>();
@@ -45,8 +53,10 @@ public class FileDataStore implements DataStore {
     }
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+
     @Override
     public void loadData() {
+
         objectMapper.findAndRegisterModules();
         destinationsDtos = readDestinations();
         usersDtos = readUsers();
@@ -62,6 +72,18 @@ public class FileDataStore implements DataStore {
 
     @Override
     public void saveData() {
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        destinationsDtosBack = new ArrayList<>();
+        reviewsDtosBack = new ArrayList<>();
+        tripsDtosBack = new ArrayList<>();
+        usersDtosBack = new ArrayList<>();
+
+        ConvertBackReviewsData();
+        ConvertBackUsersData();
+        ConvertBackTripsData();
+        ConvertBackDestinationsData();
+
         writeOutDestinations();
         writeOutReviews();
         writeOutTrips();
@@ -136,28 +158,28 @@ public class FileDataStore implements DataStore {
     // region JSON WRITE OUT
     private void writeOutDestinations(){
         try {
-            objectMapper.writeValue(new File(getPath(DESTINATIONS_FILE_NAME)), destinationsDtos);
+            objectMapper.writeValue(new File(getPath(DESTINATIONS_FILE_NAME)), destinationsDtosBack);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing destinations: " + e.getMessage(), e);
         }
     }
     private void writeOutReviews(){
         try {
-            objectMapper.writeValue(new File(getPath(REVIEWS_FILE_NAME)), reviewsDtos);
+            objectMapper.writeValue(new File(getPath(REVIEWS_FILE_NAME)), reviewsDtosBack);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing reviews: " + e.getMessage(), e);
         }
     }
     private void writeOutTrips(){
         try {
-            objectMapper.writeValue(new File(getPath(TRIPS_FILE_NAME)), tripsDtos);
+            objectMapper.writeValue(new File(getPath(TRIPS_FILE_NAME)), tripsDtosBack);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing trips: " + e.getMessage(), e);
         }
     }
     private void writeOutUsers(){
         try {
-            objectMapper.writeValue(new File(getPath(USERS_FILE_NAME)), usersDtos);
+            objectMapper.writeValue(new File(getPath(USERS_FILE_NAME)), usersDtosBack);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing users: " + e.getMessage(), e);
         }
@@ -172,7 +194,6 @@ public class FileDataStore implements DataStore {
             newRev.setId(revD.getId());
             newRev.setRating(revD.getRating());
             newRev.setComment(revD.getComment());
-
 
             for (Destination des : destinations) {
                 for (Attraction attr : des.getAttractions()) {
@@ -190,47 +211,18 @@ public class FileDataStore implements DataStore {
             reviews.add(newRev);
         }
     }
+    private void ConvertBackReviewsData(){
+        reviews.forEach(r -> {
+            ReviewDto rdto = new ReviewDto();
 
-    private List<Visit> ConvertVisitsData(List<VisitDto> dto){
-        List<Visit> visits = new ArrayList<>();
+            rdto.setId(r.getId());
+            rdto.setUserId((int)r.getUser().getId());
+            rdto.setRating(r.getRating());
+            rdto.setComment(r.getComment());
+            rdto.setAttractionId(r.getAttraction().getId());
 
-        dto.forEach(visD -> {
-            Visit visit = new Visit();
-            visit.setId(visD.getId());
-            visit.setVisitDate(visD.getVisitDate());
-            destinations.forEach(des -> {
-                des.getAttractions().forEach(atr -> {
-                    if (atr.getId() == visD.getAttractionId()){
-                        visit.setAttraction(atr);
-                    }
-
-                });
-            });
-            visits.add(visit);
-
+            reviewsDtosBack.add(rdto);
         });
-
-        /*
-        for (VisitDto visD : dto) {
-            Visit visit = new Visit();
-            visit.setId(visD.getId());
-            visit.setVisitDate(visD.getVisitDate());
-            for (Destination des : destinations) {
-                for (Attraction attr : des.getAttractions()) {
-                    if (attr.getId()==visD.getAttractionId()){
-                        visit.setAttraction(attr);
-                    }
-                }
-            }
-            visits.add(visit);
-        }*/
-        return visits;
-    }
-
-    private void setAttractions(){
-        for (Destination des : destinations) {
-            attractions.addAll(des.getAttractions());
-        }
     }
 
     private void ConvertUsersData(UserDto[] dto){
@@ -244,6 +236,25 @@ public class FileDataStore implements DataStore {
 
             users.add(newU);
         }
+    }
+    private void ConvertBackUsersData(){
+        users.forEach(u -> {
+            UserDto udto = new UserDto();
+
+            udto.setId(u.getId());
+            udto.setName(u.getFullName());
+            udto.setEmail(u.getEmail());
+            udto.setRole(u.getRole());
+            udto.setEmail(u.getEmail());
+
+            CredentialsDto c = new CredentialsDto();
+            c.setPassword(u.getCredential().getPassword());
+            c.setLoginName(u.getCredential().getUsername());
+
+            udto.setCredentials(c);
+
+            usersDtosBack.add(udto);
+        });
     }
 
     private void ConvertTripsData(TripDto[] dto){
@@ -268,13 +279,28 @@ public class FileDataStore implements DataStore {
             trips.add(trip);
         }
     }
+    private void ConvertBackTripsData(){
+        trips.forEach(t -> {
+            TripDto tdto = new TripDto();
 
-    private Credentials ConvertCredentialData(CredentialsDto dto){
-        Credentials cred = new Credentials();
-        cred.setUsername(dto.getLoginName());
-        cred.setPassword(dto.getPassword());
+            tdto.setUserId(t.getUser().getId());
+            tdto.setId(t.getId());
+            tdto.setDestinationId(t.getDestination().getId());
+            tdto.setStartDate(t.getStartDate());
+            tdto.setEndDate(t.getEndDate());
 
-        return cred;
+            List<VisitDto> vdto = new ArrayList<>();
+            t.getVisits().forEach(v -> {
+                VisitDto v1 = new VisitDto();
+                v1.setAttractionId(v.getAttraction().getId());
+                v1.setVisitDate(v.getVisitDate());
+                v1.setId(v.getId());
+                vdto.add(v1);
+            });
+
+            tdto.setVisits(vdto);
+            tripsDtosBack.add(tdto);
+        });
     }
 
     private void ConvertDestinationsData(DestinationDto[] dto){
@@ -287,7 +313,56 @@ public class FileDataStore implements DataStore {
             destinations.add(newDes);
         }
     }
+    private void ConvertBackDestinationsData(){
+        destinations.forEach(d ->{
+            DestinationDto des  = new DestinationDto();
 
+            des.setName(d.getName());
+            des.setId(d.getId());
+            des.setCountry(d.getCountry());
+
+            List<AttractionDto> atrrs = new ArrayList<>();
+            attractions.forEach(a -> {
+                AttractionDto adto = new AttractionDto();
+                adto.setName(a.getName());
+                adto.setCategory(a.getCategory());
+                adto.setDescription(a.getDescription());
+                adto.setId(a.getId());
+                atrrs.add(adto);
+            });
+            des.setAttractions(atrrs);
+
+            destinationsDtosBack.add(des);
+        });
+    }
+
+    private List<Visit> ConvertVisitsData(List<VisitDto> dto){
+        List<Visit> visits = new ArrayList<>();
+
+        dto.forEach(visD -> {
+            Visit visit = new Visit();
+            visit.setId(visD.getId());
+            visit.setVisitDate(visD.getVisitDate());
+            destinations.forEach(des -> {
+                des.getAttractions().forEach(atr -> {
+                    if (atr.getId() == visD.getAttractionId()){
+                        visit.setAttraction(atr);
+                    }
+
+                });
+            });
+            visits.add(visit);
+
+        });
+        return visits;
+    }
+    private Credentials ConvertCredentialData(CredentialsDto dto){
+        Credentials cred = new Credentials();
+        cred.setUsername(dto.getLoginName());
+        cred.setPassword(dto.getPassword());
+
+        return cred;
+    }
     private List<Attraction> ConvertAttractionData(List<AttractionDto> dto){
         List<Attraction> attr = new ArrayList<>() {};
         dto.forEach( at -> {
@@ -298,17 +373,15 @@ public class FileDataStore implements DataStore {
             newAttr.setCategory(at.getCategory());
             attr.add(newAttr);
         });
-        /*
-        for (AttractionDto d : dto) {
-            Attraction newAttr = new Attraction();
-            newAttr.setId(d.getId());
-            newAttr.setName(d.getName());
-            newAttr.setDescription(d.getDescription());
-            newAttr.setCategory(d.getCategory());
-            attr.add(newAttr);
-        }*/
+
         return attr;
     }
+    private void setAttractions(){
+        for (Destination des : destinations) {
+            attractions.addAll(des.getAttractions());
+        }
+    }
+
     // endregion
 
 }

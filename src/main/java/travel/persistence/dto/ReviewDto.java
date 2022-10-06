@@ -9,5 +9,8 @@ public class ReviewDto {
     private int rating;
     private String comment;
     private long attractionId;
+
+    public ReviewDto() {
+    }
 }
 

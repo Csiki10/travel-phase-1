@@ -1,1 +1,23 @@
-[{"id":1,"userId":100,"destinationId":1,"startDate":[2022,8,15],"endDate":[2022,8,17],"visits":[{"id":20,"visitDate":[2022,8,15],"attractionId":10}]},{"id":2,"userId":100,"destinationId":2,"startDate":[2022,8,20],"endDate":[2022,8,21],"visits":[{"id":21,"visitDate":[2022,8,15],"attractionId":11}]}]
+[ {
+  "id" : 1,
+  "userId" : 100,
+  "destinationId" : 1,
+  "startDate" : [ 2022, 8, 15 ],
+  "endDate" : [ 2022, 8, 17 ],
+  "visits" : [ {
+    "id" : 20,
+    "visitDate" : [ 2022, 8, 15 ],
+    "attractionId" : 10
+  } ]
+}, {
+  "id" : 2,
+  "userId" : 100,
+  "destinationId" : 2,
+  "startDate" : [ 2022, 8, 20 ],
+  "endDate" : [ 2022, 8, 21 ],
+  "visits" : [ {
+    "id" : 21,
+    "visitDate" : [ 2022, 8, 15 ],
+    "attractionId" : 11
+  } ]
+} ]
