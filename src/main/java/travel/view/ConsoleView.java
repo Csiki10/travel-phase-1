@@ -69,7 +69,9 @@ public class ConsoleView implements View {
                     Case5MenuAdmin();
                     break;
                 case 6:
+                    travelService.saveData();
                     System.exit(0);
+
                     break;
                 default:
                     System.out.println("Invalid menu item id");
@@ -107,6 +109,7 @@ public class ConsoleView implements View {
                     Case4Menu();
                     break;
                 case 5:
+                    travelService.saveData();
                     System.exit(0);
                     break;
                 default:

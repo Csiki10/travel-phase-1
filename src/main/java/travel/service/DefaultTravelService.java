@@ -16,6 +16,7 @@ public class DefaultTravelService implements TravelService {
         this.dataStore = dataStore;
         this.loggedinUser = new User();
     }
+
     @Override
     public User authenticateUser(Credentials credentials) {
         for (User user : dataStore.getUsers()) {
@@ -108,5 +109,9 @@ public class DefaultTravelService implements TravelService {
     public long getNextAttractionId() {
         var a = dataStore.getAttractions().get(dataStore.getAttractions().size()-1).getId();
         return dataStore.getAttractions().get(dataStore.getAttractions().size()-1).getId() +1 ;
+    }
+
+    public void saveData(){
+        dataStore.saveData();
     }
 }

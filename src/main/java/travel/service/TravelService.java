@@ -16,4 +16,5 @@ public interface TravelService {
     List<Attraction> getAttractions();
     long getNextTripId();
     long getNextAttractionId();
+    void saveData();
 }

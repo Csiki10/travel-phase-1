@@ -17,6 +17,11 @@ public class FileDataStore implements DataStore {
     private static final String USERS_FILE_NAME = "users.json";
     private static final String REVIEWS_FILE_NAME = "reviews.json";
 
+
+    private static final String DESTINATIONS_FILE_NAME1 = "destinations1.json";
+    private static final String TRIPS_FILE_NAME1 = "trips1.json";
+    private static final String USERS_FILE_NAME1 = "users1.json";
+    private static final String REVIEWS_FILE_NAME1 = "reviews1.json";
     private final String basePath;
 
     List<User> users;
@@ -24,6 +29,11 @@ public class FileDataStore implements DataStore {
     List<Review> reviews ;
     List<Destination> destinations;
     List<Attraction> attractions;
+
+    DestinationDto[] destinationsDtos;
+    UserDto[] usersDtos ;
+    TripDto[] tripsDtos  ;
+    ReviewDto[] reviewsDtos ;
 
     public FileDataStore(String basePath) {
         this.basePath = basePath;
@@ -37,21 +47,17 @@ public class FileDataStore implements DataStore {
 
     @Override
     public void loadData() {
-
         objectMapper.findAndRegisterModules();
-        DestinationDto[] destinations = readDestinations();
-        UserDto[] users = readUsers();
-        TripDto[] trips = readTrips();
-        ReviewDto[] reviews = readReviews();
+        destinationsDtos = readDestinations();
+        usersDtos = readUsers();
+        tripsDtos = readTrips();
+        reviewsDtos = readReviews();
 
-        ConvertUsersData(users);
-        ConvertDestinationsData(destinations);
-        ConvertReviewsData(reviews);
-        ConvertTripsData(trips);
-
+        ConvertUsersData(usersDtos);
+        ConvertDestinationsData(destinationsDtos);
+        ConvertReviewsData(reviewsDtos);
+        ConvertTripsData(tripsDtos);
         setAttractions();
-
-        int a = 0;
     }
 
     @Override
@@ -130,28 +136,28 @@ public class FileDataStore implements DataStore {
     // region JSON WRITE OUT
     private void writeOutDestinations(){
         try {
-            objectMapper.writeValue(new File(getPath(DESTINATIONS_FILE_NAME)), DestinationDto[].class);
+            objectMapper.writeValue(new File(getPath(DESTINATIONS_FILE_NAME)), destinationsDtos);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing destinations: " + e.getMessage(), e);
         }
     }
     private void writeOutReviews(){
         try {
-            objectMapper.writeValue(new File(getPath(REVIEWS_FILE_NAME)), DestinationDto[].class);
+            objectMapper.writeValue(new File(getPath(REVIEWS_FILE_NAME)), reviewsDtos);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing reviews: " + e.getMessage(), e);
         }
     }
     private void writeOutTrips(){
         try {
-            objectMapper.writeValue(new File(getPath(TRIPS_FILE_NAME)), DestinationDto[].class);
+            objectMapper.writeValue(new File(getPath(TRIPS_FILE_NAME)), tripsDtos);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing trips: " + e.getMessage(), e);
         }
     }
     private void writeOutUsers(){
         try {
-            objectMapper.writeValue(new File(getPath(USERS_FILE_NAME)), DestinationDto[].class);
+            objectMapper.writeValue(new File(getPath(USERS_FILE_NAME)), usersDtos);
         } catch (IOException e) {
             throw new RuntimeException("IO error happened while writing users: " + e.getMessage(), e);
         }
